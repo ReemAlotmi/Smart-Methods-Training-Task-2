@@ -1,0 +1,145 @@
+<!doctype html>
+	<head>
+		<style>
+			/* CSS comes here */
+			body {
+			    font-family: arial;
+                background-color: rgb(247, 245, 242);
+                text-align: center;
+			}
+            .header-area {
+               /*height: 60px;;
+	           width:500px;
+               padding:10px;*/
+               
+               color:rgb(29, 43, 6);
+               border-radius: 5px;
+
+            }
+			button {
+                height: 40px;
+	            width:80px;
+			    padding:10px;
+                position: absolute;
+                top: 200px;
+                left: 47%;
+			    background-color:#b90202;
+			    color: #FFFFFF;
+			    border: 0px;
+			    cursor:pointer;
+			    border-radius: 5px;
+			}
+            #connect-usb{
+                height: 40px;
+	            width:80px;
+			    padding:10px;
+                position: absolute;
+                top: 250px;
+                left: 47%;
+			    background-color:#b90202;
+			    color: #FFFFFF;
+			    border: 0px;
+			    cursor:pointer;
+			    border-radius: 5px;
+            }
+
+            #sml {
+                position: absolute;
+                top: 225px;
+                left: 33%;
+
+            }
+
+            #output { 
+                
+                position: absolute;  
+                width: 250px;  
+                height: 250px;  
+                top: 250px;  
+                left: 60%;  
+                margin-right: -50%;  
+                transform: translate(-50%, -50%);  
+                border: 2px none black;  
+ }
+
+			.hide {
+			    display:none;
+			}
+			.show {
+			    display:inline-block;
+			}
+		</style>
+        <div class="header-area" >
+            
+          
+          <h2>تحويل الصوت الى نص بواسطة جافا سكربت</h2>
+        </div>
+		<title>JavaScript Speech to Text</title>
+	</head>
+	<body>
+		<button  onclick="onConnectUsb()" id="connect-usb">   ربط  </button>
+        <p><button type="button" onclick="runSpeechRecognition()">   ابدأ    </button>&nbsp; <span id="action"></span></p>
+        
+        <div id="output" class="hide"></div>
+		<script>
+			/* JS comes here */
+		    function runSpeechRecognition() {
+		        // get output div reference
+		        var output = document.getElementById("output");
+		        // get action element reference
+		        var action = document.getElementById("action");
+                // new speech recognition object
+                var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+                var recognition = new SpeechRecognition();
+                recognition.lang="ar"; //to specifiy the language 
+            
+                // This runs when the speech recognition service starts
+             
+                recognition.onstart = function() {
+                    action.innerHTML = "<small id=sml>Recording, please speak..</small>";
+                };
+                
+                recognition.onspeechend = function() {
+                    action.innerHTML = "<small id=sml>Stopped recording.</small>";
+                    recognition.stop();
+                }
+                
+                // This runs when the speech recognition service returns result
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    output.innerHTML = "<b>النص: </b> " + transcript ;
+                    output.classList.remove("hide");
+                };
+              
+                 // start recognition
+                 recognition.start();
+	        }
+		</script>
+               <script>
+                let isConnectted = false;
+                let port;
+                let writer;
+                const enc = new TextEncoder();
+          
+          
+                async function onConnectUsb() {
+                  try {
+                    const requestOptions = {
+                      // Filter on devices with the Arduino USB vendor ID.
+                      filters: [{ usbVendorId: 0x2341 }],
+                    };
+          
+                    // Request an Arduino from the user.
+                    port = await navigator.serial.requestPort(requestOptions);
+                    await port.open({ baudrate: 115200 });
+                    writer = port.writable.getWriter();
+                    isConnectted = true;
+                  } catch (e) {
+                    console.log("err", e);
+                  }
+                }
+      
+              </script>
+	</body>
+</html> 
+
