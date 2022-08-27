@@ -3,7 +3,7 @@ Task 2 : api serial
 
 Discription:
 Using navigator serial to connect an Arduino to a web browser
-to control the robot arm through chrome web browser.
+to control the robot arm through speech-to-text commands tool done in previous task on chrome web browser.
 
 Resources:
 https://www.youtube.com/watch?v=USwKQEpAMKA&t=10s
